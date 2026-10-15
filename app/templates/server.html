@@ -1,0 +1,44 @@
+{% extends 'app_base.html' %}{% from '_macros.html' import field, csrf with context %}
+{% block title %}{{ t('nav_server') }} · MODYX{% endblock %}
+{% block heading %}{{ t('nav_server') }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h3>{{ t('connection') }}</h3>
+  {% if info.ok %}
+    <p><span class="tag up">{{ t('connected_local') }}</span></p>
+    <p class="muted">{{ t('connection_help') }}</p>
+  {% else %}<p><span class="tag down">{{ t('metrics_unavailable') }}</span></p><p class="muted">{{ t('detect_failed') }}</p>{% endif %}
+  <p class="muted">{{ t('remote_ssh_note') }}</p>
+</section>
+{% if info.ok %}
+{% for w in info.warnings %}<div class="flash warn" role="alert">{{ t(w) }}</div>{% endfor %}
+<div class="grid two">
+  <section class="card"><h3>{{ t('detected') }}</h3><ul class="rows">
+    <li><span>{{ t('os') }}</span><b>{{ info.os }}</b></li>
+    <li><span>{{ t('kernel') }}</span><b>{{ info.kernel }}</b></li>
+    <li><span>{{ t('arch') }}</span><b>{{ info.arch }}</b></li>
+    <li><span>CPU</span><b>{{ info.cpu_logical }}{% if info.cpu_physical %} ({{ info.cpu_physical }} {{ t('physical') }}){% endif %}</b></li>
+    <li><span>RAM</span><b>{{ info.ram_total | filesizeformat }}</b></li>
+    <li><span>{{ t('stat_storage') }}</span><b>{{ info.disk_free | filesizeformat }} / {{ info.disk_total | filesizeformat }}</b></li>
+    <li><span>{{ t('uptime') }}</span><b>{{ info.uptime_h }} h</b></li>
+    <li><span>{{ t('run_as') }}</span><b>{{ t('root_user') if info.root else t('normal_user') }}</b></li>
+    <li><span>{{ t('container') }}</span><b>{{ t('yes') if info.container else t('no') }}</b></li></ul></section>
+  <section class="card"><h3>{{ t('network') }}</h3><ul class="rows">
+    {% for i in info.interfaces %}<li><span>{{ i.name }}</span><b><code>{{ i.ip }}</code> <small>{{ t('scope_' ~ i.scope) }}</small></b></li>{% endfor %}</ul>
+    <p class="muted">{{ t('public_ip_note_yes') if info.has_public_ip else t('public_ip_note_no') }}</p></section>
+</div>
+<section class="card"><h3>{{ t('tools') }}</h3><p class="muted">{{ t('tools_help') }}</p><ul class="rows">
+  {% for name, ver in info.tools.items() %}<li><span><code>{{ name }}</code></span><b>{{ ver if ver else (t('installed') if ver == '' else t('not_installed')) }}</b></li>{% endfor %}</ul></section>
+{% endif %}
+<form class="card" method="post" action="{{ url_for('main.server_settings') }}" novalidate>{{ csrf() }}
+  <h3>{{ t('confirm_env') }}</h3><p class="muted">{{ t('confirm_env_help') }}</p>
+  {{ field('label', t('server_label'), value=label, required=False) }}
+  <label class="field"><span>{{ t('env_type') }}</span><select name="env_type">
+    <option value="vps" {{ 'selected' if env_type == 'vps' }}>{{ t('env_vps') }}</option>
+    <option value="dev" {{ 'selected' if env_type == 'dev' }}>{{ t('env_dev') }}</option></select></label>
+  {{ field('provider', t('provider_note'), value=provider, required=False) }}
+  {% if confirmed_at %}<p class="muted">{{ t('confirmed_at') }}: {{ confirmed_at[:16].replace('T', ' ') }}</p>{% endif %}
+  <button class="btn" type="submit">{{ t('save') }}</button>
+</form>
+<p><a href="{{ url_for('main.server_guide') }}">{{ t('free_guide_link') }}</a></p>
+{% endblock %}
