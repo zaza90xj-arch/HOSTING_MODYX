@@ -1,0 +1,33 @@
+{% extends 'base.html' %}{% from '_macros.html' import logo, flashes, csrf with context %}
+{% block body_class %}app{% endblock %}
+{% block body %}
+<aside class="side" id="side">
+  <a class="brand" href="{{ url_for('main.dashboard') }}">{{ logo() }}<span>MODYX VPS HOSTING</span></a>
+  <nav>
+    {% for ep, key, phase in nav %}
+      {% if ':' in ep %}{% set href = url_for('main.soon', feature=ep.split(':')[1]) %}{% else %}{% set href = url_for(ep) %}{% endif %}
+      <a href="{{ href }}" class="{{ 'on' if request.path == href or (ep == 'main.projects' and request.path.startswith('/projects')) else '' }}{{ ' later' if phase else '' }}">
+        <span>{{ t(key) }}</span>{% if phase %}<small>{{ t('phase_n', n=phase) }}</small>{% endif %}
+      </a>
+    {% endfor %}
+    {% if user.role == 'admin' %}<a href="#" class="later" aria-disabled="true"><span>{{ t('nav_admin') }}</span><small>{{ t('phase_n', n=8) }}</small></a>{% endif %}
+  </nav>
+</aside>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <header class="appbar">
+    <button class="icon" id="menu" type="button" aria-label="{{ t('menu') }}" aria-controls="side">☰</button>
+    <h1>{% block heading %}{% endblock %}</h1>
+    <div class="appbar-end">
+      <a class="chip" href="{{ url_for('main.set_lang', code='en' if lang == 'ar' else 'ar', next=request.path) }}">{{ 'EN' if lang == 'ar' else 'عربي' }}</a>
+      <span class="who">{{ user.name }}</span>
+      <form method="post" action="{{ url_for('auth.logout') }}">{{ csrf() }}<button class="chip" type="submit">{{ t('logout') }}</button></form>
+    </div>
+  </header>
+  {% if not user.email_verified %}
+  <div class="banner"><span>{{ t('banner_verify') }}</span>
+    <form method="post" action="{{ url_for('auth.resend_verification') }}">{{ csrf() }}<button class="chip" type="submit">{{ t('resend') }}</button></form></div>
+  {% endif %}
+  <main class="content">{{ flashes() }}{% block content %}{% endblock %}</main>
+</div>
+{% endblock %}
