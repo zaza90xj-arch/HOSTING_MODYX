@@ -1,0 +1,10 @@
+{% extends 'app_base.html' %}
+{% block title %}{{ t('nav_projects') }} · MODYX{% endblock %}
+{% block heading %}{{ t('nav_projects') }}{% endblock %}
+{% block content %}
+<div class="toolbar"><span class="muted">{{ rows|length }} / {{ plan.max_projects }}</span><a class="btn small" href="{{ url_for('main.project_new') }}">{{ t('new_project') }}</a></div>
+{% if rows %}<div class="grid two">{% for p in rows %}
+<a class="card link" href="{{ url_for('main.project', pid=p.id) }}"><h3>{{ p.name }}</h3><p class="muted">{{ p.description or '—' }}</p>
+  <p><span class="tag">{{ p.runtime }}</span><span class="tag status-{{ p.status }}">{{ t('status_' ~ p.status) }}</span></p></a>{% endfor %}</div>
+{% else %}<section class="card center"><h3>{{ t('empty_projects') }}</h3><p class="muted">{{ t('empty_projects_help') }}</p><a class="btn" href="{{ url_for('main.project_new') }}">{{ t('new_project') }}</a></section>{% endif %}
+{% endblock %}
