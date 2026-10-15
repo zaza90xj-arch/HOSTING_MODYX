@@ -1,0 +1,8 @@
+{% extends 'public_base.html' %}{% from '_macros.html' import field, csrf with context %}
+{% block content %}
+<form class="card narrow" method="post" novalidate>
+  <h2>{{ t('forgot') }}</h2><p class="muted">{{ t('forgot_help') }}</p>{{ csrf() }}
+  {{ field('email', t('email'), 'email', autocomplete='email') }}
+  <button class="btn block" type="submit">{{ t('send_reset') }}</button>
+</form>
+{% endblock %}
