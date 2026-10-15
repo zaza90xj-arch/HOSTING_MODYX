@@ -1,0 +1,15 @@
+{% from '_macros.html' import logo, flashes with context %}<!doctype html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04060a">
+<title>{% block title %}MODYX VPS HOSTING{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% block body %}{% endblock %}
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body></html>
