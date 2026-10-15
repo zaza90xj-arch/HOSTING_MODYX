@@ -1,0 +1,16 @@
+{% extends 'app_base.html' %}{% from '_macros.html' import field, csrf with context %}
+{% block title %}{{ t('new_project') }} · MODYX{% endblock %}
+{% block heading %}{{ t('new_project') }}{% endblock %}
+{% block content %}
+{% if blocked %}<section class="card"><p>{{ t(blocked, limit=plan.max_projects) }}</p></section>{% endif %}
+<form class="card" method="post" novalidate>{{ csrf() }}
+  {{ field('name', t('project_name'), value=form.get('name', '')) }}
+  <label class="field"><span>{{ t('description') }}</span><textarea name="description" rows="2" maxlength="300">{{ form.get('description', '') }}</textarea></label>
+  <label class="field"><span>{{ t('runtime') }}</span>
+    <select name="runtime" id="runtime" data-defaults='{{ defaults | tojson | forceescape }}'>{% for r in ['static','node','python','php','docker'] %}<option value="{{ r }}" {{ 'selected' if form.get('runtime') == r }}>{{ t('rt_' ~ r) }}</option>{% endfor %}</select></label>
+  {{ field('build_command', t('build_command'), value=form.get('build_command', ''), required=False) }}
+  {{ field('start_command', t('start_command'), value=form.get('start_command', ''), required=False) }}
+  <p class="muted">{{ t('commands_note') }}</p>
+  <button class="btn" type="submit" {{ 'disabled' if blocked }}>{{ t('create') }}</button>
+</form>
+{% endblock %}
