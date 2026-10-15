@@ -1,0 +1,7 @@
+{% extends 'app_base.html' %}
+{% block title %}{{ t('nav_' ~ feature) }} · MODYX{% endblock %}
+{% block heading %}{{ t('nav_' ~ feature) }}{% endblock %}
+{% block content %}
+<section class="card center"><span class="tag">{{ t('phase_n', n=phase) }}</span><h2>{{ t('not_built_title') }}</h2><p class="muted">{{ t('soon_' ~ feature) }}</p><p class="muted">{{ t('not_built_note') }}</p>
+<a class="btn" href="{{ url_for('main.dashboard') }}">{{ t('nav_dashboard') }}</a></section>
+{% endblock %}
