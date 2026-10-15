@@ -1,0 +1,6 @@
+{% extends 'public_base.html' %}
+{% block title %}{{ code }} · MODYX{% endblock %}
+{% block content %}
+<section class="card narrow center"><p class="bignum">{{ code }}</p><h2>{{ t('error_' ~ code) }}</h2><p class="muted">{{ t('error_' ~ code ~ '_help') }}</p>
+<a class="btn" href="{{ url_for('main.index') }}">{{ t('back_home') }}</a></section>
+{% endblock %}
