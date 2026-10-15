@@ -1,0 +1,10 @@
+{% extends 'app_base.html' %}
+{% block title %}{{ t('free_guide_link') }} · MODYX{% endblock %}
+{% block heading %}{{ t('free_guide_link') }}{% endblock %}
+{% block content %}
+<section class="card"><p>{{ t('guide_intro') }}</p><p class="muted">{{ t('guide_verify') }}</p></section>
+<section class="card"><h3>Oracle Cloud (Always Free)</h3><ul class="rows"><li><span>{{ t('g_oracle_1') }}</span></li><li><span>{{ t('g_oracle_2') }}</span></li><li><span>{{ t('g_oracle_3') }}</span></li></ul></section>
+<section class="card"><h3>Google Cloud (e2-micro)</h3><ul class="rows"><li><span>{{ t('g_gcp_1') }}</span></li><li><span>{{ t('g_gcp_2') }}</span></li></ul></section>
+<section class="card"><h3>{{ t('g_other_title') }}</h3><ul class="rows"><li><span>{{ t('g_other_1') }}</span></li><li><span>{{ t('g_other_2') }}</span></li></ul></section>
+<section class="card"><h3>{{ t('g_nofree_title') }}</h3><p>{{ t('g_nofree') }}</p></section>
+{% endblock %}
