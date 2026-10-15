@@ -1,0 +1,9 @@
+{% extends 'app_base.html' %}
+{% block title %}{{ t('nav_plans') }} · MODYX{% endblock %}
+{% block heading %}{{ t('nav_plans') }}{% endblock %}
+{% block content %}
+<section class="card"><p class="muted">{{ t('billing_note') }}</p></section>
+<div class="grid plans">{% for p in plans %}
+<section class="card {{ 'current' if p.id == user.plan_id }}"><h3>{{ t('plan_' ~ p.id) }}</h3>{% if p.id == user.plan_id %}<span class="tag">{{ t('current_plan') }}</span>{% endif %}
+<ul class="rows"><li><span>{{ t('stat_projects') }}</span><b>{{ p.max_projects }}</b></li><li><span>{{ t('stat_storage') }}</span><b>{{ p.storage_mb }} MB</b></li><li><span>RAM</span><b>{{ p.ram_mb }} MB</b></li><li><span>CPU</span><b>{{ p.cpu_percent }}%</b></li><li><span>{{ t('build_minutes') }}</span><b>{{ p.build_minutes }}</b></li></ul></section>{% endfor %}</div>
+{% endblock %}
