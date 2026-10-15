@@ -1,0 +1,39 @@
+{% extends 'app_base.html' %}
+{% block title %}{{ t('nav_dashboard') }} · MODYX{% endblock %}
+{% block heading %}{{ t('nav_dashboard') }}{% endblock %}
+{% block content %}
+<div class="grid stats">
+  <section class="card"><h3>{{ t('stat_projects') }}</h3><p class="bignum">{{ n_projects }}<small> / {{ plan.max_projects }}</small></p>
+    <progress max="{{ plan.max_projects }}" value="{{ n_projects }}"></progress><p class="muted">{{ t('plan_label') }}: {{ t('plan_' ~ plan.id) }}</p></section>
+  <section class="card"><h3>{{ t('stat_storage') }}</h3><p class="bignum">{{ used | filesizeformat }}</p>
+    <progress max="{{ plan.storage_mb * 1048576 }}" value="{{ used }}"></progress><p class="muted">{{ t('of') }} {{ plan.storage_mb }} MB</p></section>
+  <section class="card"><h3>{{ t('stat_running') }}</h3><p class="bignum">0</p><p class="muted">{{ t('no_runtime_yet') }}</p></section>
+</div>
+{% if live %}
+<section class="card" id="live" data-endpoint="{{ url_for('main.api_metrics') }}" data-down="{{ t('metrics_unavailable') }}" data-up="{{ t('metrics_live') }}">
+  <div class="toolbar"><h3>{{ t('host_title') }}</h3><a class="chip" href="{{ url_for('main.server_page') }}">{{ t('nav_server') }}</a></div>
+  <p class="muted" id="live-state">{{ t('metrics_waiting') }}</p>
+  {% if env_type == 'dev' %}<p class="flash warn">{{ t('dev_mode_banner') }}</p>{% elif not env_type %}<p class="flash warn">{{ t('server_unconfirmed') }}</p>{% endif %}
+  <div class="grid stats">
+    <div><span class="muted">CPU</span><p class="bignum small" data-m="cpu">—</p><progress max="100" value="0" data-p="cpu"></progress></div>
+    <div><span class="muted">RAM</span><p class="bignum small" data-m="ram">—</p><progress max="100" value="0" data-p="ram"></progress><span class="muted" data-m="ram_detail"></span></div>
+    <div><span class="muted">{{ t('stat_storage') }}</span><p class="bignum small" data-m="disk">—</p><progress max="100" value="0" data-p="disk"></progress><span class="muted" data-m="disk_detail"></span></div>
+    <div><span class="muted">{{ t('network') }}</span><p class="bignum small" data-m="net_down">—</p><span class="muted" data-m="net_up"></span></div>
+    <div><span class="muted">{{ t('load_avg') }}</span><p class="bignum small" data-m="load">—</p><span class="muted" data-m="procs"></span></div>
+    <div><span class="muted">{{ t('uptime') }}</span><p class="bignum small" data-m="uptime">—</p></div>
+  </div>
+</section>
+<section class="card"><h3>{{ t('recent_errors') }}</h3>
+  {% if events %}<ul class="rows">{% for e in events %}<li><span>{{ e.message }}</span><time class="muted">{{ e.created_at[:16].replace('T', ' ') }}</time></li>{% endfor %}</ul>
+  {% else %}<p class="muted">{{ t('no_events') }}</p>{% endif %}</section>
+{% endif %}
+<div class="grid two">
+  <section class="card"><h3>{{ t('recent_projects') }}</h3>
+    {% if recent %}<ul class="rows">{% for p in recent %}<li><a href="{{ url_for('main.project', pid=p.id) }}">{{ p.name }}</a><span class="tag">{{ p.runtime }}</span></li>{% endfor %}</ul>
+    {% else %}<p class="muted">{{ t('empty_projects') }}</p><a class="btn small" href="{{ url_for('main.project_new') }}">{{ t('new_project') }}</a>{% endif %}</section>
+  <section class="card"><h3>{{ t('recent_activity') }}</h3>
+    {% if activity %}<ul class="rows">{% for a in activity %}<li><span>{{ a.action }}{% if a.target %} · {{ a.target }}{% endif %}</span><time class="muted">{{ a.created_at[:16].replace('T', ' ') }}</time></li>{% endfor %}</ul>
+    {% else %}<p class="muted">{{ t('empty_activity') }}</p>{% endif %}</section>
+</div>
+<section class="card"><h3>{{ t('nav_deployments') }}</h3><p class="muted">{{ t('no_deploys_yet') }}</p></section>
+{% endblock %}
