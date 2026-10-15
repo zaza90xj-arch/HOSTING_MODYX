@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    env_file: .env
+    environment:
+      MODYX_ENV: production
+      COOKIE_SECURE: "false"   # set true once HTTPS is in front
+      DATABASE_PATH: /srv/instance/modyx.db
+      STORAGE_ROOT: /srv/data/storage
+    ports: ["8000:8000"]
+    volumes:
+      - modyx_db:/srv/instance
+      - modyx_files:/srv/data
+    restart: unless-stopped
+volumes:
+  modyx_db:
+  modyx_files:
