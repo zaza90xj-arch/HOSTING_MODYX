@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% from '_macros.html' import logo, flashes with context %}
+{% block body %}
+<header class="topbar">
+  <a class="brand" href="{{ url_for('main.index') }}">{{ logo() }}<span>MODYX VPS HOSTING</span></a>
+  <nav class="topnav">
+    <a href="{{ url_for('main.status') }}">{{ t('nav_status') }}</a>
+    <a href="{{ url_for('main.set_lang', code='en' if lang == 'ar' else 'ar', next=request.path) }}">{{ 'English' if lang == 'ar' else 'العربية' }}</a>
+    {% if user %}<a class="btn small" href="{{ url_for('main.dashboard') }}">{{ t('nav_dashboard') }}</a>
+    {% else %}<a href="{{ url_for('auth.login') }}">{{ t('login') }}</a>{% if registration_open %}<a class="btn small" href="{{ url_for('auth.register') }}">{{ t('register') }}</a>{% endif %}{% endif %}
+  </nav>
+</header>
+<main class="public">{{ flashes() }}{% block content %}{% endblock %}</main>
+{% endblock %}
