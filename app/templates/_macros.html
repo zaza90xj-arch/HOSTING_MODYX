@@ -1,0 +1,6 @@
+{% macro logo(size=28) %}<svg class="logo" width="{{ size }}" height="{{ size }}" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27V5l6.5 0L16 16 22.5 5H29v22h-5.5V14.5L16 27 8.5 14.5V27z" fill="currentColor"/></svg>{% endmacro %}
+{% macro flashes() %}{% with msgs = get_flashed_messages(with_categories=true) %}{% for cat, m in msgs %}<div class="flash {{ cat }}" role="{{ 'alert' if cat == 'err' else 'status' }}">{{ m }}</div>{% endfor %}{% endwith %}{% endmacro %}
+{% macro field(name, label, type='text', value='', autocomplete=None, required=True, minlength=None) %}
+<label class="field"><span>{{ label }}</span><input name="{{ name }}" type="{{ type }}" value="{{ value }}"{% if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %}{% if required %} required{% endif %}{% if minlength %} minlength="{{ minlength }}"{% endif %}></label>
+{% endmacro %}
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endmacro %}
