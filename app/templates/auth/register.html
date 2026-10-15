@@ -1,0 +1,14 @@
+{% extends 'public_base.html' %}{% from '_macros.html' import field, csrf with context %}
+{% block title %}{{ t('register') }} · MODYX{% endblock %}
+{% block content %}
+<form class="card narrow" method="post" novalidate>
+  <h2>{{ t('register') }}</h2>{{ csrf() }}
+  {{ field('name', t('name'), value=form.get('name', ''), autocomplete='name') }}
+  {{ field('email', t('email'), 'email', value=form.get('email', ''), autocomplete='email') }}
+  {{ field('password', t('password'), 'password', autocomplete='new-password', minlength=8) }}
+  {{ field('password2', t('password_again'), 'password', autocomplete='new-password', minlength=8) }}
+  <p class="muted">{{ t('password_hint') }}</p>
+  <button class="btn block" type="submit">{{ t('register') }}</button>
+  <p class="muted">{{ t('have_account') }} <a href="{{ url_for('auth.login') }}">{{ t('login') }}</a></p>
+</form>
+{% endblock %}
