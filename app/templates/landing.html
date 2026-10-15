@@ -1,0 +1,21 @@
+{% extends 'public_base.html' %}
+{% block title %}MODYX VPS HOSTING{% endblock %}
+{% block content %}
+<section class="hero">
+  <h2>{{ t('hero_title') }}</h2>
+  <p class="lead">{{ t('hero_sub') }}</p>
+  <div class="cta">
+    {% if user %}<a class="btn" href="{{ url_for('main.dashboard') }}">{{ t('nav_dashboard') }}</a>
+    {% else %}{% if registration_open %}<a class="btn" href="{{ url_for('auth.register') }}">{{ t('register_owner') }}</a>{% endif %}<a class="btn ghost" href="{{ url_for('auth.login') }}">{{ t('login') }}</a>{% endif %}
+  </div>
+</section>
+<section class="pipeline" aria-labelledby="pl">
+  <h3 id="pl">{{ t('pipeline_title') }}</h3>
+  <p class="muted">{{ t('pipeline_note') }}</p>
+  <ol>
+    {% for n in range(1, 9) %}
+    <li class="{{ 'live' if n <= 2 else '' }}"><span class="node"></span><div><strong>{{ t('phase_' ~ n) }}</strong><small>{{ t('phase_state_live') if n <= 2 else t('phase_state_next') }}</small></div></li>
+    {% endfor %}
+  </ol>
+</section>
+{% endblock %}
