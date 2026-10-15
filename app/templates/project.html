@@ -1,0 +1,24 @@
+{% extends 'app_base.html' %}{% from '_macros.html' import field, csrf with context %}
+{% block title %}{{ p.name }} · MODYX{% endblock %}
+{% block heading %}{{ p.name }}{% endblock %}
+{% block content %}
+<div class="grid stats">
+  <section class="card"><h3>{{ t('status') }}</h3><p><span class="tag status-{{ p.status }}">{{ t('status_' ~ p.status) }}</span></p><p class="muted">{{ t('status_created_help') }}</p></section>
+  <section class="card"><h3>{{ t('stat_storage') }}</h3><p class="bignum small">{{ size | filesizeformat }}</p><progress max="{{ plan.storage_mb * 1048576 }}" value="{{ size }}"></progress></section>
+  <section class="card"><h3>{{ t('project_id') }}</h3><p><code>{{ p.slug }}</code></p><p class="muted">{{ t('created_at') }}: {{ p.created_at[:10] }}</p></section>
+</div>
+<form class="card" method="post" action="{{ url_for('main.project_edit', pid=p.id) }}" novalidate>{{ csrf() }}<h3>{{ t('settings') }}</h3>
+  {{ field('name', t('project_name'), value=p.name) }}
+  <label class="field"><span>{{ t('description') }}</span><textarea name="description" rows="2" maxlength="300">{{ p.description }}</textarea></label>
+  <label class="field"><span>{{ t('runtime') }}</span><select name="runtime" id="runtime" data-defaults='{{ defaults | tojson | forceescape }}'>{% for r in ['static','node','python','php','docker'] %}<option value="{{ r }}" {{ 'selected' if p.runtime == r }}>{{ t('rt_' ~ r) }}</option>{% endfor %}</select></label>
+  {{ field('build_command', t('build_command'), value=p.build_command, required=False) }}
+  {{ field('start_command', t('start_command'), value=p.start_command, required=False) }}
+  <p class="muted">{{ t('commands_note') }}</p><button class="btn" type="submit">{{ t('save') }}</button>
+</form>
+<section class="card"><h3>{{ t('later_features') }}</h3><p class="muted">{{ t('project_later') }}</p></section>
+<form class="card danger" method="post" action="{{ url_for('main.project_delete', pid=p.id) }}" novalidate>{{ csrf() }}
+  <h3>{{ t('delete_project') }}</h3><p>{{ t('delete_warning') }}</p>
+  <label class="field"><span>{{ t('type_to_confirm', slug=p.slug) }}</span><input name="confirm" id="confirm" data-slug="{{ p.slug }}" autocomplete="off"></label>
+  <button class="btn red" id="delbtn" type="submit" disabled>{{ t('delete_project') }}</button>
+</form>
+{% endblock %}
