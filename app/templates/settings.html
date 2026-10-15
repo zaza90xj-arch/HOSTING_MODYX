@@ -1,0 +1,16 @@
+{% extends 'app_base.html' %}{% from '_macros.html' import field, csrf with context %}
+{% block title %}{{ t('nav_settings') }} · MODYX{% endblock %}
+{% block heading %}{{ t('nav_settings') }}{% endblock %}
+{% block content %}
+<form class="card" method="post" novalidate>{{ csrf() }}<input type="hidden" name="form" value="profile"><h3>{{ t('profile') }}</h3>
+  {{ field('name', t('name'), value=user.name) }}
+  <label class="field"><span>{{ t('email') }}</span><input value="{{ user.email }}" disabled></label>
+  <label class="field"><span>{{ t('language') }}</span><select name="lang"><option value="ar" {{ 'selected' if user.lang == 'ar' }}>العربية</option><option value="en" {{ 'selected' if user.lang == 'en' }}>English</option></select></label>
+  <p class="muted">{{ t('role_label') }}: {{ t('role_' ~ user.role) }} · {{ t('plan_label') }}: {{ t('plan_' ~ user.plan_id) }}</p>
+  <button class="btn" type="submit">{{ t('save') }}</button></form>
+<form class="card" method="post" novalidate>{{ csrf() }}<input type="hidden" name="form" value="password"><h3>{{ t('change_password') }}</h3>
+  {{ field('current', t('current_password'), 'password', autocomplete='current-password') }}
+  {{ field('password', t('new_password'), 'password', autocomplete='new-password', minlength=8) }}
+  {{ field('password2', t('password_again'), 'password', autocomplete='new-password', minlength=8) }}
+  <button class="btn" type="submit">{{ t('change_password') }}</button></form>
+{% endblock %}
