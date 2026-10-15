@@ -1,0 +1,17 @@
+[Unit]
+Description=MODYX VPS HOSTING panel
+After=network.target
+
+[Service]
+User=modyx
+Group=modyx
+WorkingDirectory=/opt/modyx-vps
+EnvironmentFile=/etc/modyx/env
+ExecStart=/opt/modyx-vps/venv/bin/gunicorn -w 2 -b 127.0.0.1:8000 wsgi:app
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
